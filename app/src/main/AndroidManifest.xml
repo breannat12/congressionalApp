@@ -28,6 +28,9 @@
             android:name=".Home"
             android:exported="false" />
         <activity
+            android:name=".Results"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

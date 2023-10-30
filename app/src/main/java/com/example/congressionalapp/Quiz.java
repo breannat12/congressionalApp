@@ -2,16 +2,25 @@ package com.example.congressionalapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.text.Editable;
+import android.text.TextWatcher;
+
 
 public class Quiz extends AppCompatActivity {
 
     public int yardSize = 0;
     public int oftenPerWeek = 0;
-    public double sprinklerType = 0; //3 for fixed, 4 for rotating, 0.033 for drip irrigation
+    public double sprinklerType = 0; //3 for fixed, 4 for rotating, 1 for drip irrigation
     public int sprinklerCount = 0;
     public int lengthMin = 0;
     public int waterUsed = 0;
@@ -23,7 +32,7 @@ public class Quiz extends AppCompatActivity {
         CheckBox size1 = findViewById(R.id.size1);
         CheckBox size2 = findViewById(R.id.size2);
         CheckBox size3 = findViewById(R.id.size3);
-        CheckBox size4 = findViewById(R.id.size4);
+        EditText size4 = findViewById(R.id.editText);
 
         CheckBox often1 = findViewById(R.id.often1);
         CheckBox often2 = findViewById(R.id.often2);
@@ -41,19 +50,23 @@ public class Quiz extends AppCompatActivity {
         CheckBox long2 = findViewById(R.id.long2);
         CheckBox long3 = findViewById(R.id.long3);
 
-        TextView test1 = findViewById(R.id.textView7);
-        TextView test2 = findViewById(R.id.textView8);
-        TextView test3 = findViewById(R.id.textView13);
-        TextView test4 = findViewById(R.id.textView14);
-        TextView test5 = findViewById(R.id.textView15);
-        TextView test6 = findViewById(R.id.textView16);
+        TextView para1 = findViewById(R.id.fb1);
+        TextView para2 = findViewById(R.id.fb2);
+        TextView para3 = findViewById(R.id.fb3);
+        TextView para4 = findViewById(R.id.fb4);
+        TextView para5 = findViewById(R.id.fb5);
+
+        Button resultsBtn = (Button) findViewById(R.id.resultsBtn);
+
+        TextView t = findViewById(R.id.textView12);
+
 
         //SIZE BUTTONS//
         size1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 yardSize = 3000; // Map the answer to a numeric value
-                test1.setText(String.valueOf(yardSize));
+                para1.setVisibility(View.VISIBLE);
             }
         });
 
@@ -61,7 +74,7 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 yardSize = 10000; // Map the answer to a numeric value
-                test1.setText(String.valueOf(yardSize));
+                para1.setVisibility(View.VISIBLE);
             }
         });
 
@@ -69,32 +82,46 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 yardSize = 20000; // Map the answer to a numeric value
-                test1.setText(String.valueOf(yardSize));
+                para1.setVisibility(View.VISIBLE);
             }
         });
 
-        size4.setOnClickListener(new View.OnClickListener() {
+        size4.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                String sizeBoxText = size2.getText().toString();
-                test1.setText(String.valueOf(yardSize));
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // This method is called after the text changes. Update the userAnswer variable.
+                String userAnswerText = s.toString(); // Get the user's input as a String
+                para1.setVisibility(View.VISIBLE);
 
                 try {
-                    yardSize = Integer.parseInt(sizeBoxText);
-                    // integerValue now contains the integer value of the text
+                    yardSize = Integer.parseInt(userAnswerText);
+                    // Now, the userAnswer variable contains the integer value of the user's input
+                    // You can use it as an integer in your code.
                 } catch (NumberFormatException e) {
-                    // Handle the case where the textNumber is not a valid integer
-                    // For example, if textNumber is not a number, this block will be executed
+                    // Handle the case where the user's input is not a valid integer
+                    // For example, you can show an error message to the user.
                 }
+
             }
         });
+
 
         //OFTEN BUTTONS//
         often1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 oftenPerWeek = 7; // Map the answer to a numeric value
-                test2.setText(String.valueOf(oftenPerWeek));
+                para2.setVisibility(View.VISIBLE);
             }
         });
 
@@ -102,7 +129,7 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 oftenPerWeek = 3; // Map the answer to a numeric value
-                test2.setText(String.valueOf(oftenPerWeek));
+                para2.setVisibility(View.VISIBLE);
             }
         });
 
@@ -110,16 +137,19 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 oftenPerWeek = 1; // Map the answer to a numeric value
-                test2.setText(String.valueOf(oftenPerWeek));
+                para2.setVisibility(View.VISIBLE);
             }
         });
+
 
         //TYPE BUTTONS//
         type1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sprinklerType = 3; // Map the answer to a numeric value
-                test3.setText(String.valueOf(sprinklerType));
+                para3.setVisibility(View.VISIBLE);
+                waterUsed = (int)(0.2*yardSize + (lengthMin*sprinklerType*sprinklerCount*oftenPerWeek));
+                t.setText(String.valueOf(waterUsed));
             }
         });
 
@@ -127,7 +157,9 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sprinklerType = 4; // Map the answer to a numeric value
-                test3.setText(String.valueOf(sprinklerType));
+                para3.setVisibility(View.VISIBLE);
+                waterUsed = (int)(0.2*yardSize + (lengthMin*sprinklerType*sprinklerCount*oftenPerWeek));
+                t.setText(String.valueOf(waterUsed));
             }
         });
 
@@ -135,16 +167,19 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sprinklerType = 1; // Map the answer to a numeric value
-                test3.setText(String.valueOf(sprinklerType));
+                para3.setVisibility(View.VISIBLE);
+                waterUsed = (int)(0.2*yardSize + (lengthMin*sprinklerType*sprinklerCount*oftenPerWeek));
+                t.setText(String.valueOf(waterUsed));
             }
         });
+
 
         //COUNT BUTTONS//
         count1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sprinklerCount = 4; // Map the answer to a numeric value
-                test4.setText(String.valueOf(sprinklerCount));
+                para4.setVisibility(View.VISIBLE);
             }
         });
 
@@ -152,7 +187,7 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sprinklerCount = 10; // Map the answer to a numeric value
-                test4.setText(String.valueOf(sprinklerCount));
+                para4.setVisibility(View.VISIBLE);
             }
         });
 
@@ -160,19 +195,17 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sprinklerCount = 14; // Map the answer to a numeric value
-                test4.setText(String.valueOf(sprinklerCount));
+                para4.setVisibility(View.VISIBLE);
             }
         });
+
 
         //LENGTH BUTTONS//
         long1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lengthMin = 30; // Map the answer to a numeric value
-                test5.setText(String.valueOf(lengthMin));
-
-                waterUsed = (int)(0.2*yardSize + lengthMin*sprinklerType*sprinklerCount*oftenPerWeek);
-                test6.setText(String.valueOf(waterUsed));
+                para5.setVisibility(View.VISIBLE);
             }
         });
 
@@ -180,10 +213,7 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 lengthMin = 45; // Map the answer to a numeric value
-                test5.setText(String.valueOf(lengthMin));
-
-                waterUsed = (int)(0.2*yardSize + lengthMin*sprinklerType*sprinklerCount*oftenPerWeek);
-                test6.setText(String.valueOf(waterUsed));
+                para5.setVisibility(View.VISIBLE);
             }
         });
 
@@ -191,13 +221,26 @@ public class Quiz extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 lengthMin = 75; // Map the answer to a numeric value
-                test5.setText(String.valueOf(lengthMin));
-
-                waterUsed = (int)(0.2*yardSize + lengthMin*sprinklerType*sprinklerCount*oftenPerWeek);
-                test6.setText(String.valueOf(waterUsed));
+                para5.setVisibility(View.VISIBLE);
             }
         });
 
+        resultsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openResults();
+            }
+        });
+    }
 
+    private void openResults() {
+        Intent intent = new Intent(this, Results.class);
+        intent.putExtra("waterUsed", waterUsed); // Pass the value of waterUsed
+        startActivity(intent);
+    }
+
+
+    public int getWaterUsed() {
+        return waterUsed;
     }
 }
